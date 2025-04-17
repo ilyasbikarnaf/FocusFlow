@@ -1,10 +1,12 @@
 "use client";
 
+import { SignupUser } from "@/app/actions/auth";
 import { SignupSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const initialState = {
   success: false,
@@ -20,9 +22,21 @@ export default function Signup() {
     resolver: zodResolver(SignupSchema),
   });
 
-  const [state, formAction, isPending] = useActionState(fn, initialState);
+  const [state, formAction, isPending] = useActionState(
+    async (data: FormData) => {
+      const result = await SignupUser(data);
 
-  const onSubmit = (data) => console.log(data);
+      if (!result.success) {
+        toast.error(result.message);
+        return null;
+      }
+
+      toast.success(result.message);
+    },
+    initialState
+  );
+
+  // const onSubmit = (data) => console.log(data);
 
   return (
     <div className="flex flex-col justify-center min-h-screen  sm:px-6 lg:px-8 ">
@@ -35,13 +49,14 @@ export default function Signup() {
 
       <form
         className="flex flex-col sm:mx-auto sm:max-w-md sm:w-full bg-[#1A1A1A] p-8 border-1 border-[#444444]/30   rounded space-y-7"
-        onSubmit={handleSubmit(onSubmit)}
+        action={formAction}
       >
         <div className="flex flex-col gap-2">
           <label htmlFor="email"> Email</label>
           <input
             {...register("email")}
             type="email"
+            name="email"
             id="email"
             className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
           />
@@ -58,6 +73,7 @@ export default function Signup() {
           <input
             {...register("password")}
             id="password"
+            name="password"
             type="password"
             className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
           />
@@ -73,6 +89,7 @@ export default function Signup() {
           <input
             {...register("confirmPassword")}
             type="password"
+            name="confirmPassword"
             id="confirmPassword"
             className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
           />
@@ -84,9 +101,10 @@ export default function Signup() {
         </div>
 
         <input
+          disabled={true}
           type="submit"
-          value="Sign up"
-          className="hover:cursor-pointer bg-blue-500 p-2 rounded-md"
+          value={`${true ? "loading..." : "Sign up"}`}
+          className="hover:cursor-pointer bg-blue-500 p-2 rounded-md disabled:cursor-not-allowed disabled:opacity-75"
         />
         <p className="text-white/50 text-center">
           Already have an account? &nbsp;
