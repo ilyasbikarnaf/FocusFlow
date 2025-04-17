@@ -3,7 +3,13 @@
 import { SignupSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useActionState } from "react";
 import { useForm } from "react-hook-form";
+
+const initialState = {
+  success: false,
+  message: "",
+};
 
 export default function Signup() {
   const {
@@ -13,6 +19,8 @@ export default function Signup() {
   } = useForm({
     resolver: zodResolver(SignupSchema),
   });
+
+  const [state, formAction, isPending] = useActionState(fn, initialState);
 
   const onSubmit = (data) => console.log(data);
 
