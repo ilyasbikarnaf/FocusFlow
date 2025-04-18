@@ -1,6 +1,6 @@
 "use client";
 
-import { SignupUser } from "@/app/actions/auth";
+import { createUserAccount } from "@/app/actions/auth";
 import FormInput from "@/Components/FormInput";
 import { LoadingSpinner } from "@/Components/LoadingSpinner";
 import { SignupSchema } from "@/lib/schemas/auth";
@@ -34,21 +34,21 @@ export default function Signup() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(
     async (prevData, data: FormData) => {
-      const result = await SignupUser(data);
+      const result = await createUserAccount(data);
 
       if (!result.success) {
         toast.error(result.message);
         return null;
       }
 
-      const singinResult = await signIn?.create({
+      const clerkSinginResult = await signIn?.create({
         strategy: "password",
         password: data.get("password") as string,
         identifier: data.get("email") as string,
       });
 
-      if (setActive && singinResult?.status === "complete") {
-        await setActive({ session: singinResult.createdSessionId });
+      if (setActive && clerkSinginResult?.status === "complete") {
+        await setActive({ session: clerkSinginResult.createdSessionId });
       }
 
       toast.success(result.message);

@@ -8,14 +8,12 @@ type FormInputProps = {
     password: string;
     confirmPassword: string;
   }>;
-
   register: UseFormRegister<{
     email: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
   }>;
 };
-
 export default function FormInput({
   register,
   labelText,
