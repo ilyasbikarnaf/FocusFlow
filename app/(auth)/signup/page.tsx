@@ -1,12 +1,18 @@
 "use client";
 
 import { SignupUser } from "@/app/actions/auth";
+import FormInput from "@/Components/FormInput";
+import { LoadingSpinner } from "@/Components/LoadingSpinner";
 import { SignupSchema } from "@/lib/schemas/auth";
+import { useSignIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import clsx from "clsx";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { z } from "zod";
 
 const initialState = {
   success: false,
@@ -22,8 +28,12 @@ export default function Signup() {
     resolver: zodResolver(SignupSchema),
   });
 
+  const { signIn, setActive } = useSignIn();
+  const router = useRouter();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(
-    async (data: FormData) => {
+    async (prevData, data: FormData) => {
       const result = await SignupUser(data);
 
       if (!result.success) {
@@ -31,12 +41,33 @@ export default function Signup() {
         return null;
       }
 
+      const singinResult = await signIn?.create({
+        strategy: "password",
+        password: data.get("password") as string,
+        identifier: data.get("email") as string,
+      });
+
+      if (setActive && singinResult?.status === "complete") {
+        await setActive({ session: singinResult.createdSessionId });
+      }
+
       toast.success(result.message);
+      router.push("/dashboard");
     },
     initialState
   );
 
-  // const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data: z.output<typeof SignupSchema>) => {
+    const formData = new FormData();
+
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("confirmPassword", data.confirmPassword);
+
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
 
   return (
     <div className="flex flex-col justify-center min-h-screen  sm:px-6 lg:px-8 ">
@@ -49,63 +80,43 @@ export default function Signup() {
 
       <form
         className="flex flex-col sm:mx-auto sm:max-w-md sm:w-full bg-[#1A1A1A] p-8 border-1 border-[#444444]/30   rounded space-y-7"
-        action={formAction}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col gap-2">
-          <label htmlFor="email"> Email</label>
-          <input
-            {...register("email")}
-            type="email"
-            name="email"
-            id="email"
-            className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
-          />
-
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label htmlFor="password" className="opacity-80 text-sm ml-1">
-            Password
-          </label>
-          <input
-            {...register("password")}
-            id="password"
-            name="password"
-            type="password"
-            className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label htmlFor="confirmPassword" className="opacity-80 text-sm ml-1">
-            Confirm Password
-          </label>
-          <input
-            {...register("confirmPassword")}
-            type="password"
-            name="confirmPassword"
-            id="confirmPassword"
-            className=" h-10 w-full rounded-md border border-gray-300/10 bg-[#222222] px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 "
-          />
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-sm">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </div>
-
-        <input
-          disabled={true}
-          type="submit"
-          value={`${true ? "loading..." : "Sign up"}`}
-          className="hover:cursor-pointer bg-blue-500 p-2 rounded-md disabled:cursor-not-allowed disabled:opacity-75"
+        <FormInput
+          type="email"
+          errors={errors}
+          register={register}
+          labelText="Email"
         />
+        <FormInput
+          type="password"
+          errors={errors}
+          register={register}
+          labelText="Password"
+        />
+        <FormInput
+          type="confirmPassword"
+          errors={errors}
+          register={register}
+          labelText="Confirm Password"
+        />
+        <button
+          disabled={isPending}
+          type="submit"
+          className={clsx(
+            "hover:cursor-pointer bg-blue-500 p-2 rounded-md disabled:cursor-not-allowed disabled:opacity-75",
+            isPending && "flex  justify-center gap-2 bg"
+          )}
+        >
+          {isPending ? (
+            <>
+              <LoadingSpinner />
+              Loading...
+            </>
+          ) : (
+            "Sign up"
+          )}
+        </button>
         <p className="text-white/50 text-center">
           Already have an account? &nbsp;
           <Link className="text-white" href="/signin">

@@ -4,10 +4,13 @@ import connectDB from "@/db";
 import { User } from "@/db/schema";
 import { SignupSchema } from "@/lib/schemas/auth";
 import { hashPassword } from "@/lib/utils/authUtils";
+import { clerkClient } from "@clerk/nextjs/server";
 
 type AuthResponse = {
   success: boolean;
   message: string;
+  email?: string;
+  password?: string;
 };
 
 export const SignupUser = async (formData: FormData): Promise<AuthResponse> => {
@@ -29,26 +32,31 @@ export const SignupUser = async (formData: FormData): Promise<AuthResponse> => {
   }
 
   try {
-    await connectDB();
+    //clerk create user
+    const client = await clerkClient();
 
-    const user = await User.find({ email });
-
-    if (user) {
-      return {
-        success: false,
-        message:
-          "An account with this email already exists. Please sign in or use a different email.",
-      };
-    }
-
-    const hashedPassword = await hashPassword(password);
-    await User.create({ email, password: hashedPassword });
+    await client.users.createUser({ emailAddress: [email], password });
 
     return {
       success: true,
       message: "Successfully signed up! Welcome to FocusFlow!",
+      email,
+      password,
     };
   } catch (error: any) {
-    return { success: false, message: error.message };
+    if (
+      error.errors[0].message ===
+      "That email address is taken. Please try another."
+    ) {
+      return {
+        success: false,
+        message:
+          "An account with this email already exists. Please use a different email or try logging in",
+      };
+    }
+    return {
+      success: false,
+      message: "An unexpected error occured please try again later",
+    };
   }
 };
