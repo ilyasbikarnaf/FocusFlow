@@ -1,9 +1,6 @@
 "use server";
 
-import connectDB from "@/db";
-import { User } from "@/db/schema";
 import { SignupSchema } from "@/lib/schemas/auth";
-import { hashPassword } from "@/lib/utils/authUtils";
 import { clerkClient } from "@clerk/nextjs/server";
 
 type AuthResponse = {
@@ -13,7 +10,9 @@ type AuthResponse = {
   password?: string;
 };
 
-export const SignupUser = async (formData: FormData): Promise<AuthResponse> => {
+export const createUserAccount = async (
+  formData: FormData
+): Promise<AuthResponse> => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
