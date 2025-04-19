@@ -1,10 +1,17 @@
 "use client";
 
-import { ChartArea, HomeIcon, ListTodo, UserIcon } from "lucide-react";
+import {
+  ChartArea,
+  HomeIcon,
+  ListTodo,
+  PlusIcon,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import NavLink from "./NavLink";
 import { useState } from "react";
 import UserEmail from "./UserEmail";
+import { usePathname } from "next/navigation";
 
 const PAGES = [
   {
@@ -22,10 +29,16 @@ const PAGES = [
     label: "Analytics",
     icon: <ChartArea size={20} />,
   },
+  {
+    href: "/tasks/new",
+    label: "New Task",
+    icon: <PlusIcon size={20} />,
+  },
 ];
 
 export default function Navigation() {
-  const [isActive, setIsActive] = useState("Dashboard");
+  // const [isActive, setIsActive] = useState("Dashboard");
+  const pathName = usePathname();
 
   return (
     <aside className="fixed inset-y-0 left-0 flex w-16 flex-col border-r border-gray-200/10 px-2 py-4 md:w-64 md:px-4 dark:border-dark-border-subtle bg-[#1A1A1A]">
@@ -42,8 +55,8 @@ export default function Navigation() {
             <NavLink
               {...page}
               key={page.href}
-              setIsActive={() => setIsActive(page.label)}
-              isActive={isActive === page.label}
+              // setIsActive={() => setIsActive(page.label)}
+              isActive={pathName === page.href}
             />
           );
         })}

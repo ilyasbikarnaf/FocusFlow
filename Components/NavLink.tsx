@@ -7,7 +7,6 @@ type NavLinkProps = {
   label: string;
   isActive: boolean;
   icon: JSX.Element;
-  setIsActive: () => void;
 };
 
 export default function NavLink({
@@ -15,12 +14,10 @@ export default function NavLink({
   label,
   icon,
   isActive = false,
-  setIsActive,
 }: NavLinkProps) {
   return (
     <Link
       href={href}
-      onClick={setIsActive}
       className={cn(
         "flex items-center px-2 py-2 text-sm font-medium rounded-md",
         isActive

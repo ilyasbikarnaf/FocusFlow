@@ -14,7 +14,7 @@ export default function SignoutButton() {
       setIsPending(true);
 
       await signOut();
-      router.push("signin");
+      router.push("/signin");
     } catch {
       toast.error("Failed to log out try again.");
     } finally {
