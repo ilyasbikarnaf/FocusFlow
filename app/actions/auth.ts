@@ -43,6 +43,7 @@ export const createUserAccount = async (
       password,
     };
   } catch (error: any) {
+    console.log(error);
     if (
       error.errors[0].message ===
       "That email address is taken. Please try another."
