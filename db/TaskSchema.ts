@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { boolean } from "zod";
 
 const { Schema } = mongoose;
 
@@ -38,6 +37,10 @@ const TaskSchema = new Schema({
     default: false,
   },
   userId: {
+    type: String,
+    required: true,
+  },
+  taskId: {
     type: String,
     required: true,
   },

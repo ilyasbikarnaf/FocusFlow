@@ -3,6 +3,7 @@
 import { Task } from "@/db/TaskSchema";
 import { getCurrentUserId } from "@/lib/utils/dal";
 import { z } from "zod";
+import { nanoid } from "nanoid";
 
 const TaskSchema = z.object({
   title: z.string(),
@@ -10,6 +11,7 @@ const TaskSchema = z.object({
   status: z.enum(["todo", "in_progress", "done"]),
   priority: z.enum(["low", "medium", "high"]),
   userId: z.string().min(1, "User ID is required"),
+  taskId: z.string(),
 });
 
 export type ActionResponse = {
@@ -37,9 +39,11 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
       status: formData.get("status") as string,
       priority: formData.get("priority") as string,
       userId,
+      taskId: nanoid(),
     };
 
     const validatedData = TaskSchema.safeParse(data);
+    console.log(validatedData);
 
     if (!validatedData.success) {
       return {
@@ -49,7 +53,9 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
       };
     }
 
+    console.log("we are at the last step");
     await Task.create(validatedData.data);
+    console.log("done");
 
     return { success: true, message: "Task Created Successfully" };
   } catch (error) {

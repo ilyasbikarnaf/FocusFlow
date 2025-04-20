@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function Task() {
-  const tasks = [1, 2, 3, 4];
+  const tasks = await getAllTasks();
 
   return (
     <div className="w-full p-8 flex flex-col gap-y-9">
@@ -30,14 +30,14 @@ export default async function Task() {
         {/* tasks rows */}
 
         <div className="divide-y divide-gray-200/10 divide-dark-border-default">
-          {tasks.map((task, i) => (
+          {tasks.map((task) => (
             <TableTaskComponent
-              key={i}
-              href={`/tasks/${i}`}
-              priority="High"
-              status="Done"
-              title="today"
-              createdAt="now"
+              key={task.taskId}
+              href={`/tasks/${task.taskId}`}
+              priority={task.priority}
+              status={task.status}
+              title={task.title}
+              createdAt={task.createdAt}
             />
           ))}
           {/* <Link

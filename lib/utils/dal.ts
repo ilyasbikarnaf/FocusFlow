@@ -3,7 +3,18 @@ import { Task } from "@/db/TaskSchema";
 import { auth } from "@clerk/nextjs/server";
 import mongoose from "mongoose";
 import { cache } from "react";
-import { unstable_cacheTag as cacheTag } from "next/cache";
+
+type RetrievedTasksType = {
+  title: string;
+  description: string;
+  status: "todo" | "in_progress" | "done";
+  priority: "low" | "medium" | "high";
+  editedAt?: Date;
+  isEdited: boolean;
+  userId: string;
+  createdAt: Date;
+  taskId: string;
+};
 
 export const getCurrentUserId = cache(async () => {
   try {
@@ -18,24 +29,24 @@ export const getCurrentUserId = cache(async () => {
 });
 
 export async function getAllTasks() {
-  // await connectDB();
+  await connectDB();
 
   const userId = await getCurrentUserId();
-  const tasks = await Task.find({ userId });
+  const tasks = (await Task.find(
+    { userId },
+    { _id: 0, __v: 0 }
+  )) as RetrievedTasksType[];
+  console.log("got tasks");
 
   return tasks;
 }
 
-export async function getTask(id: string, userId: string) {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error("Invalid Task Id");
-  }
-
-  const task = await Task.findOne({ _id: id, userId });
+export async function getTask(taskId: string, userId: string) {
+  const task = await Task.findOne({ taskId, userId }, { _id: 0, __v: 0 });
 
   if (!task) {
     throw new Error("Task not found or unauthorized");
   }
 
-  return task;
+  return task as RetrievedTasksType;
 }
