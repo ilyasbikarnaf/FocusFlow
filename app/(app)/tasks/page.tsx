@@ -1,10 +1,11 @@
+import TableTaskComponent from "@/Components/TableTaskComponent";
 import { getAllTasks } from "@/lib/utils/dal";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function Task() {
-  const tasks = await getAllTasks();
+  const tasks = [1, 2, 3, 4];
 
   return (
     <div className="w-full p-8 flex flex-col gap-y-9">
@@ -29,7 +30,17 @@ export default async function Task() {
         {/* tasks rows */}
 
         <div className="divide-y divide-gray-200/10 divide-dark-border-default">
-          <Link
+          {tasks.map((task, i) => (
+            <TableTaskComponent
+              key={i}
+              href={`/tasks/${i}`}
+              priority="High"
+              status="Done"
+              title="today"
+              createdAt="now"
+            />
+          ))}
+          {/* <Link
             href={"/somewhere"}
             className="block bg-[#222222]  hover:bg-[#1A1A1A] transition-all"
           >
@@ -43,7 +54,7 @@ export default async function Task() {
               <div className="col-span-2">fasdf</div>
               <div className="col-span-3">asdf</div>
             </div>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

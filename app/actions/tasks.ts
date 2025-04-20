@@ -2,9 +2,6 @@
 
 import { Task } from "@/db/TaskSchema";
 import { getCurrentUserId } from "@/lib/utils/dal";
-import { auth, getAuth } from "@clerk/nextjs/server";
-import { revalidateTag } from "next/cache";
-import { redirect, RedirectType } from "next/navigation";
 import { z } from "zod";
 
 const TaskSchema = z.object({
@@ -53,8 +50,6 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
     }
 
     await Task.create(validatedData.data);
-
-    revalidateTag("Tasks");
 
     return { success: true, message: "Task Created Successfully" };
   } catch (error) {

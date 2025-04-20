@@ -18,10 +18,7 @@ export const getCurrentUserId = cache(async () => {
 });
 
 export async function getAllTasks() {
-  "use cache";
-  cacheTag("Tasks");
-
-  await connectDB();
+  // await connectDB();
 
   const userId = await getCurrentUserId();
   const tasks = await Task.find({ userId });

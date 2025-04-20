@@ -25,7 +25,8 @@ export default function NewTask() {
         }
 
         toast.success("Task created successfully");
-        router.push("/dashboard");
+        router.push("/tasks");
+        return { success: true, message: "Task Created succesfully" };
       } catch {
         toast.error("failed to create your task try again");
       }
