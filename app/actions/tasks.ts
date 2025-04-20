@@ -26,7 +26,6 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
     const userId = await getCurrentUserId();
 
     if (!userId) {
-      console.log(userId);
       return {
         success: false,
         message: "unauthorized",
@@ -43,7 +42,6 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
     };
 
     const validatedData = TaskSchema.safeParse(data);
-    console.log(validatedData);
 
     if (!validatedData.success) {
       return {
@@ -53,10 +51,7 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
       };
     }
 
-    console.log("we are at the last step");
     await Task.create(validatedData.data);
-    console.log("done");
-
     return { success: true, message: "Task Created Successfully" };
   } catch (error) {
     console.log(error);
@@ -67,6 +62,63 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
   }
 }
 
-async function updateTask() {}
+export async function updateTask(
+  taskId: string,
+  formData: FormData
+): Promise<ActionResponse> {
+  try {
+    const userId = await getCurrentUserId();
 
-async function deleteTask() {}
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    const data = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      status: formData.get("status") as string,
+      priority: formData.get("priority") as string,
+      userId,
+      taskId: nanoid(),
+    };
+
+    const validatedData = TaskSchema.safeParse(data);
+
+    if (!validatedData.success) {
+      return { success: false, message: "Invalid data" };
+    }
+
+    await Task.findOneAndUpdate({ taskId, userId }, validatedData.data);
+
+    console.log("updated succesfully");
+    console.log("data", validatedData);
+
+    return { success: true, message: "Task updated succesfully" };
+  } catch (e) {
+    console.log(e);
+    return { success: false, message: "Failed to update task" };
+  }
+}
+
+export async function deleteTask(taskId: string) {
+  try {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    const result = await Task.deleteOne({ taskId, userId });
+    if (result.deletedCount === 0) {
+      return {
+        success: false,
+        message: "Task not found or you don't have permission",
+      };
+    }
+
+    return { success: true, message: "Task Deleted succesfully" };
+  } catch (e) {
+    console.log(e);
+    return { success: false, message: "Failed to delete the task" };
+  }
+}

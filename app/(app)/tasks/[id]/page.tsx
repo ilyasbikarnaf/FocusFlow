@@ -1,11 +1,13 @@
+import DeleteButton from "@/Components/DeleteButton";
 import cn from "@/lib/utils/cn";
 import { getTask } from "@/lib/utils/dal";
 import formatRelativeTime from "@/lib/utils/formatRelativeTime";
 import { getPriorityLabel, getStatusLabel } from "@/lib/utils/taskLabel";
 import { currentUser, User } from "@clerk/nextjs/server";
-import { ArrowLeft, PenIcon } from "lucide-react";
+import { ArrowLeft, DeleteIcon, PenIcon } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
+
+export const revalidate = 3600; // seconds = 1 hour
 
 export default async function TaskPage({
   params,
@@ -13,9 +15,18 @@ export default async function TaskPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+
   const user = (await currentUser()) as User;
 
-  const task = await getTask(id, user.id);
+  if (!user) {
+    return (
+      <div className="mx-auto max-w-3xl p-8">
+        Please Login To preview Your Tasks
+      </div>
+    );
+  }
+
+  const task = await getTask(id);
   const { label: statusLabel, classes: statusClasses } = getStatusLabel(
     task.status
   );
@@ -35,14 +46,18 @@ export default async function TaskPage({
 
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold ">{task.title}</h1>
-        <div>
-          <Link
-            href={"./edit"}
-            className="flex items-center gap-2 border-1 border-white/10 px-3 py-1 rounded-md text-sm hover:cursor-pointer hover:bg-gray-800/40 transition-all"
-          >
-            <PenIcon size={16} />
-            <span>Edit</span>
-          </Link>
+        <div className="flex items-center gap-2">
+          <div>
+            <Link
+              href={`${id}/edit`}
+              className="flex items-center gap-2 border-1 border-white/10 px-3 py-1 rounded-md text-sm hover:cursor-pointer hover:bg-gray-800/40 transition-all"
+            >
+              <PenIcon size={16} />
+              <span>Edit</span>
+            </Link>
+          </div>
+
+          <DeleteButton taskId={id} />
         </div>
       </div>
 
@@ -70,7 +85,7 @@ export default async function TaskPage({
           <p className="text-md">
             {task.isEdited
               ? `Updated ${formatRelativeTime(task.editedAt!)}`
-              : ""}{" "}
+              : ""}
           </p>
         </div>
 

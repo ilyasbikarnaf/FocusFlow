@@ -40,21 +40,6 @@ export default async function Task() {
               createdAt={task.createdAt}
             />
           ))}
-          {/* <Link
-            href={"/somewhere"}
-            className="block bg-[#222222]  hover:bg-[#1A1A1A] transition-all"
-          >
-            <div className="grid grid-cols-12 px-6 py-4 gap-5 items-center">
-              <div className="col-span-5">askldjf</div>
-              <div className="col-span-2">
-                <span className="bg-purple-400 px-2 rounded-xl py-0.5">
-                  asdf
-                </span>
-              </div>
-              <div className="col-span-2">fasdf</div>
-              <div className="col-span-3">asdf</div>
-            </div>
-          </Link> */}
         </div>
       </div>
     </div>

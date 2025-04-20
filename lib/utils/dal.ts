@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import mongoose from "mongoose";
 import { cache } from "react";
 
-type RetrievedTasksType = {
+export type RetrievedTasksType = {
   title: string;
   description: string;
   status: "todo" | "in_progress" | "done";
@@ -32,18 +32,19 @@ export async function getAllTasks() {
   await connectDB();
 
   const userId = await getCurrentUserId();
-  const tasks = (await Task.find(
-    { userId },
-    { _id: 0, __v: 0 }
-  )) as RetrievedTasksType[];
-  console.log("got tasks");
+  const tasks = (await Task.find({ userId }, { _id: 0, __v: 0 }).sort({
+    createdAt: -1,
+  })) as RetrievedTasksType[];
 
   return tasks;
 }
 
-export async function getTask(taskId: string, userId: string) {
-  const task = await Task.findOne({ taskId, userId }, { _id: 0, __v: 0 });
+export async function getTask(taskId: string) {
+  const userId = await getCurrentUserId();
+  console.log(userId);
 
+  const task = await Task.findOne({ taskId }, { _id: 0, __v: 0 });
+  console.log(task);
   if (!task) {
     throw new Error("Task not found or unauthorized");
   }
