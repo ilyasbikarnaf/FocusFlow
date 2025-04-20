@@ -86,7 +86,7 @@ export default async function TaskPage({
             className="hover:cursor-pointer bg-blue-500 px-4 py-2 rounded-md text-md hover:bg-blue-600 transition-all h-10 disabled:hover:cursor-not-allowed disabled:hover:bg-blue-500 disabled:opacity-60"
             disabled={false}
           >
-            {false ? "Creating..." : "Create Task"}
+            {false ? "Editin..." : "Edit Task"}
           </button>
         </div>
       </form>
