@@ -4,6 +4,7 @@ import { Task } from "@/db/TaskSchema";
 import { getCurrentUserId } from "@/lib/utils/dal";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import connectDB from "@/db";
 
 const TaskSchema = z.object({
   title: z.string(),
@@ -34,6 +35,7 @@ export type ActionResponse = {
 
 export async function createTask(formData: FormData): Promise<ActionResponse> {
   try {
+    await connectDB();
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -65,7 +67,6 @@ export async function createTask(formData: FormData): Promise<ActionResponse> {
     await Task.create(validatedData.data);
     return { success: true, message: "Task Created Successfully" };
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       message: "Error occured during task creation",
@@ -78,6 +79,7 @@ export async function updateTask(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
+    await connectDB();
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -103,18 +105,15 @@ export async function updateTask(
 
     await Task.findOneAndUpdate({ taskId, userId }, validatedData.data);
 
-    console.log("updated succesfully");
-    console.log("data", validatedData);
-
     return { success: true, message: "Task updated succesfully" };
   } catch (e) {
-    console.log(e);
     return { success: false, message: "Failed to update task" };
   }
 }
 
 export async function deleteTask(taskId: string) {
   try {
+    await connectDB();
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -131,7 +130,6 @@ export async function deleteTask(taskId: string) {
 
     return { success: true, message: "Task Deleted succesfully" };
   } catch (e) {
-    console.log(e);
     return { success: false, message: "Failed to delete the task" };
   }
 }

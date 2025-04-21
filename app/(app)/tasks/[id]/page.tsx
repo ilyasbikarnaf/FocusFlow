@@ -7,8 +7,6 @@ import { currentUser, User } from "@clerk/nextjs/server";
 import { ArrowLeft, DeleteIcon, PenIcon } from "lucide-react";
 import Link from "next/link";
 
-export const revalidate = 3600; // seconds = 1 hour
-
 export default async function TaskPage({
   params,
 }: {

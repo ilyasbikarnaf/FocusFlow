@@ -26,7 +26,6 @@ export default function TaskForm({ task }: { task: RetrievedTasksType }) {
         toast.success("Task Updated sucessfully");
         router.push("/tasks");
       } catch (err) {
-        console.log(err);
         toast.error("Failed to update task");
         return;
       }

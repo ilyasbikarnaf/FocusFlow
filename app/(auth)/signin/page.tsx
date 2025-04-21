@@ -47,7 +47,7 @@ export default function Signin() {
   }
 
   return (
-    <div className="flex flex-col justify-center min-h-screen  sm:px-6 lg:px-8 ">
+    <div className="flex flex-col md:justify-center mt-10 min-h-screen  sm:px-6 lg:px-8 ">
       <div className="space-y-2 mb-10">
         <h1 className="text-center text-3xl">FocusFlow</h1>
         <h6 className="text-lg font-semibold text-center tracking-widest uppercase">

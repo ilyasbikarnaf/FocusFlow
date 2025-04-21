@@ -40,11 +40,10 @@ export async function getAllTasks() {
 }
 
 export async function getTask(taskId: string) {
+  await connectDB();
   const userId = await getCurrentUserId();
-  console.log(userId);
 
-  const task = await Task.findOne({ taskId }, { _id: 0, __v: 0 });
-  console.log(task);
+  const task = await Task.findOne({ taskId, userId }, { _id: 0, __v: 0 });
   if (!task) {
     throw new Error("Task not found or unauthorized");
   }

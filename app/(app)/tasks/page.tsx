@@ -16,7 +16,7 @@ export default async function Task() {
           className="text-md bg-blue-500 md:p-2.5 p-1 px-2 rounded-md hover:cursor-pointer flex items-center gap-x-2 hover:opacity-90"
         >
           <PlusIcon size={18} />
-          <span>New Issue</span>
+          <span>New Task</span>
         </Link>
       </div>
       <div className="overflow-hidden rounded-lg border border-white/10  shadow-sm border-dark-border-default bg-dark-high">
