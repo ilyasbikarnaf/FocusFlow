@@ -11,7 +11,9 @@ export default function UserEmail() {
       <div className="flex items-center justify-start p-2">
         <UserIcon size={20} className="text-gray-500 mr-2" />
         <Suspense fallback={<h1>Loading...</h1>}>
-          <span>{user?.emailAddresses[0].emailAddress}</span>
+          <span className="hidden md:inline">
+            {user?.emailAddresses[0].emailAddress}
+          </span>
         </Suspense>
       </div>
       <SignoutButton />

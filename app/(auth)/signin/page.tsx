@@ -39,7 +39,7 @@ export default function Signin() {
         }
 
         toast.success("Login successful. Let's get to work!");
-        router.push("/dashboard");
+        router.push("/tasks");
       } catch {
         toast.error("Invalid email or password. Please try again.");
       }

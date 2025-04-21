@@ -37,7 +37,7 @@ export default function NewTask() {
   return (
     <div className="mx-auto max-w-3xl p-8 flex flex-col gap-y-4">
       <Link
-        href={"/dashboard"}
+        href={"/tasks"}
         className="flex gap-x-1 items-center text-gray-400 text-sm hover:text-white/70"
       >
         <ArrowLeft size={16} />
@@ -104,7 +104,7 @@ export default function NewTask() {
 
         <div className="flex justify-end items-center gap-4">
           <Link
-            href={"/dashboard"}
+            href={"/tasks"}
             className="px-4 py-2 h-10 bg-transparent hover:bg-gray-800 transition-all rounded-md"
           >
             Cancel

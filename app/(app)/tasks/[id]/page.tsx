@@ -35,7 +35,7 @@ export default async function TaskPage({
   );
 
   return (
-    <div className="mx-auto max-w-3xl p-8 flex flex-col gap-y-6">
+    <div className="mx-auto max-w-3xl md:p-8 flex flex-col gap-y-6">
       <Link
         href={"/tasks"}
         className="flex gap-x-1 items-center text-gray-400 text-sm hover:text-white/70"
@@ -61,8 +61,8 @@ export default async function TaskPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-y-3 p-6 border-1 border-white/10 rounded-lg bg-[#1A1A1A]">
-        <div className="flex gap-3 items-center">
+      <div className="flex flex-col gap-y-4 md:p-6 p-4 border-1 border-white/10 rounded-lg bg-[#1A1A1A]">
+        <div className="flex gap-3 items-center flex-wrap">
           <p
             className={cn(
               "text-sm px-3  bg-blue-300 rounded-full",
@@ -79,10 +79,10 @@ export default async function TaskPage({
           >
             {priorityLabel}
           </p>
-          <p className="text-md text-gray-500 font-thin">{`Created ${formatRelativeTime(
+          <p className="text-md text-gray-500 text-sm font-thin">{`Created ${formatRelativeTime(
             task.createdAt
           )}`}</p>
-          <p className="text-md">
+          <p className="text-md text-gray-500 text-sm font-thin">
             {task.isEdited
               ? `Updated ${formatRelativeTime(task.editedAt!)}`
               : ""}
@@ -101,7 +101,7 @@ export default async function TaskPage({
 
       <div className="flex flex-col gap-y-3 bg-[#1A1A1A] p-6 border-white/10 border-1 rounded-lg">
         <h4 className="text-xl">Details</h4>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
             <h6 className="text-gray-500 text-sm">assigned to</h6>
             <span>

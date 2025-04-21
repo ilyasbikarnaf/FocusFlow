@@ -97,7 +97,7 @@ export default function TaskForm({ task }: { task: RetrievedTasksType }) {
 
       <div className="flex justify-end items-center gap-4">
         <Link
-          href={"/dashboard"}
+          href={"/tasks"}
           className="px-4 py-2 h-10 bg-transparent hover:bg-gray-800 transition-all rounded-md"
         >
           Cancel

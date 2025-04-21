@@ -28,20 +28,27 @@ export default function TableTaskComponent({
       className="block bg-[#222222]  hover:bg-[#1A1A1A] transition-all"
     >
       <div className="grid grid-cols-12 px-6 py-4 gap-5 items-center">
-        <div className="col-span-5">{title}</div>
-        <div className="col-span-2">
-          <span className={cn("px-2.5 rounded-xl text-sm py-1", statusClasses)}>
+        <div className="md:col-span-5 col-span-3">{title}</div>
+        <div className="md:col-span-2 col-span-3">
+          <span
+            className={cn(
+              "px-2.5 rounded-xl text-[10px] md:text-base py-1",
+              statusClasses
+            )}
+          >
             {statusLabel}
           </span>
         </div>
-        <div className="col-span-2">
+        <div className="md:col-span-2 col-span-3">
           <span
-            className={cn(`${priorityClasses} text-sm px-2.5 rounded-xl py-1`)}
+            className={cn(
+              `${priorityClasses} text-sm text-[12px] md:text-base px-2.5 rounded-xl py-1`
+            )}
           >
             {priorityLabel}
           </span>
         </div>
-        <div className="col-span-3 text-gray-400">
+        <div className="md:col-span-3 col-span-3 text-xs md:text-sm lg:text-base text-gray-400">
           {formatRelativeTime(createdAt)}
         </div>
       </div>

@@ -52,7 +52,7 @@ export default function Signup() {
       }
 
       toast.success(result.message);
-      router.push("/dashboard");
+      router.push("/tasks");
     },
     initialState
   );

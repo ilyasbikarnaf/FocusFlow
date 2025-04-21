@@ -12,7 +12,18 @@ const TaskSchema = z.object({
   priority: z.enum(["low", "medium", "high"]),
   userId: z.string().min(1, "User ID is required"),
   taskId: z.string(),
+  editedAt: z.date().optional(),
+  isEdited: z.boolean().default(false),
 });
+
+// editedAt: {
+//   type: Date,
+//   default: null,
+// },
+// isEdited: {
+//   type: Boolean,
+//   default: false,
+// },
 
 export type ActionResponse = {
   success: boolean;
@@ -80,6 +91,8 @@ export async function updateTask(
       priority: formData.get("priority") as string,
       userId,
       taskId: nanoid(),
+      isEdited: true,
+      editedAt: new Date(),
     };
 
     const validatedData = TaskSchema.safeParse(data);

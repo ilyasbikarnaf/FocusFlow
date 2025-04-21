@@ -12,9 +12,9 @@ export default async function TaskPage({
   const task = await getTask(id);
 
   return (
-    <div className="mx-auto max-w-3xl p-8 flex flex-col gap-y-4">
+    <div className="mx-auto max-w-3xl md:p-8 p-4 flex flex-col gap-y-4">
       <Link
-        href={"/dashboard"}
+        href={"/tasks"}
         className="flex gap-x-1 items-center text-gray-400 text-sm hover:text-white/70"
       >
         <ArrowLeft size={16} />
