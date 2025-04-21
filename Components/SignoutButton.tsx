@@ -29,7 +29,9 @@ export default function SignoutButton() {
       onClick={handleClick}
     >
       <LogOutIcon size={20} className="mr-2" />
-      <span>{isPending ? "Signing out..." : "Sign Out"}</span>
+      <span className="hidden md:inline">
+        {isPending ? "Signing out..." : "Sign Out"}
+      </span>
     </button>
   );
 }
